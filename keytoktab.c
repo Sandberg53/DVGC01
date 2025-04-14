@@ -1,3 +1,4 @@
+//Daniel Sandberg
 /**********************************************************************/
 /* lab 1 DVG C01 - Driver OBJECT                                      */
 /**********************************************************************/
@@ -74,7 +75,6 @@ static tab keywordtab[ ] = {
 /**********************************************************************/
 void p_toktab()
 {
-    //printf("\n *** TO BE DONE");
     printf("-----Printing_KeyWordTable-----\n");
     for(int i=0; keywordtab[i].token != nfound; i++){ printf("Keyword: %-10s  |  Code: %d\n", keywordtab[i].text, keywordtab[i].token);}
     printf("-----Printing_TokenTable-----\n");
@@ -87,7 +87,6 @@ void p_toktab()
 /**********************************************************************/
 toktyp lex2tok(char * fplex)
 {
-    //printf("\n *** TO BE DONE");  return 0;
     for(int i=0; tokentab[i].token != nfound; i++){   if(strcmp(fplex, tokentab[i].text) == 0) return tokentab[i].token;}
     for(int i=0; keywordtab[i].token != nfound; i++){   if(strcmp(fplex, keywordtab[i].text) == 0) return keywordtab[i].token;}
     return id;  
@@ -98,7 +97,6 @@ toktyp lex2tok(char * fplex)
 /**********************************************************************/
 toktyp key2tok(char * fplex)
 {
-    //printf("\n *** TO BE DONE");  return 0;
                                                                                 //Go through keywordtab and check for matches with fplex
     for(int i = 0; keywordtab[i].token != nfound; i++){                               //Loop through table until key is nfound
         if(strcmp(fplex, keywordtab[i].text) == 0) return keywordtab[i].token;
@@ -111,7 +109,6 @@ toktyp key2tok(char * fplex)
 /**********************************************************************/
 char * tok2lex(toktyp ftok)
 {
-    //printf("\n *** TO BE DONE");  return 0;
     for(int i=0; tokentab[i].token != nfound; i++){   if(ftok ==tokentab[i].token) return tokentab[i].text;}
     for(int i=0; keywordtab[i].token != nfound; i++){   if(ftok ==keywordtab[i].token) return keywordtab[i].text;}
     return "TERROR";  //If not found retrun errror

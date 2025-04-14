@@ -1,3 +1,4 @@
+//Daniel Sandberg
 /**********************************************************************/
 /* lab 1 DVG C01 - Lexer OBJECT                                       */
 /**********************************************************************/
@@ -36,7 +37,13 @@ static int  plex  = 0;               /* current index lexeme  buffer  */
 
 static void get_prog()
 {
-    printf("\n *** TO BE DONE");
+    int i = 0; 
+    while(i < BUFSIZE -2 && (buffer[i]=fgetc(stdin))!=EOF)
+    {
+        i++;
+    }
+    buffer[i++] = '$';
+    buffer[i] = '\0';
 }
 
 /**********************************************************************/
@@ -45,7 +52,9 @@ static void get_prog()
 
 static void pbuffer()
 {
-    printf("\n *** TO BE DONE");
+    printf("----Printing_Buffer----\n");
+    printf("%s\n", buffer);
+
 }
 
 /**********************************************************************/
@@ -54,7 +63,7 @@ static void pbuffer()
 
 static void get_char()
 {
-    printf("\n *** TO BE DONE");
+    lexbuf[plex++] = buffer[pbuf++];
 }
 
 /**********************************************************************/
@@ -69,7 +78,40 @@ static void get_char()
 /**********************************************************************/
 int get_token()
 {
-    printf("\n *** TO BE DONE"); return 0;
+    if(pbuf == 0){
+        get_prog();
+        pbuffer();
+    }
+    memset(lexbuf, '\0', LEXSIZE);
+    plex = 0;
+    while(isspace(buffer[pbuf])) pbuf++;
+
+    get_char();
+    if(isdigit(lexbuf[0])){
+        while(!isspace(buffer[pbuf]) && isdigit(lexbuf[pbuf])){
+            get_char();
+        }
+        return number;
+    }
+    else if(isalpha(lexbuf[0]))
+    {
+        while(!isspace(buffer[pbuf]) && (isalpha(buffer[pbuf]) || isdigit(buffer[pbuf]))) 
+        {
+            get_char();
+        }
+        toktyp tok = key2tok(lexbuf); 
+        return (tok != nfound) ? tok : id;  //check if tokebn or id
+        
+    } 
+    else{
+        if((lexbuf[0] == ':') && (buffer[pbuf] == '='))
+        {
+            get_char();
+        } 
+        return lex2tok(lexbuf);
+    }
+    return 0;
+
 }
 
 /**********************************************************************/
@@ -77,7 +119,7 @@ int get_token()
 /**********************************************************************/
 char * get_lexeme()
 {
-    printf("\n *** TO BE DONE"); return "$";
+    return lexbuf;
 }
 
 /**********************************************************************/

@@ -1,3 +1,4 @@
+//Daniel Sandberg
 /**********************************************************************/
 /* lab 1 DVG C01 - Parser OBJECT                                      */
 /**********************************************************************/
@@ -12,8 +13,8 @@
 /**********************************************************************/
 /* Other OBJECT's METHODS (IMPORTED)                                  */
 /**********************************************************************/
-/* #include "keytoktab.h"   */       /* when the keytoktab is added   */
-/* #include "lexer.h"       */       /* when the lexer     is added   */
+ #include "keytoktab.h"          /* when the keytoktab is added   */
+ #include "lexer.h"              /* when the lexer     is added   */
 /* #include "symtab.h"      */       /* when the symtab    is added   */
 /* #include "optab.h"       */       /* when the optab     is added   */
 
@@ -29,21 +30,21 @@ static int  is_parse_ok=1;
 /**********************************************************************/
 /* define tokens + keywords NB: remove this when keytoktab.h is added */
 /**********************************************************************/
-enum tvalues { program = 257, id, input, output };
+//enum tvalues { program = 257, id, input, output };
 /**********************************************************************/
 /* Simulate the token stream for a given program                      */
 /**********************************************************************/
-static int tokens[] = {program, id, '(', input, ',', output, ')', ';',
-               '$' };
+/*static int tokens[] = {program, id, '(', input, ',', output, ')', ';',
+               '$' };*/
 
 /**********************************************************************/
 /*  Simulate the lexer -- get the next token from the buffer          */
 /**********************************************************************/
-static int pget_token()
+/*static int pget_token()
 {
     static int i=0;
     if (tokens[i] != '$') return tokens[i++]; else return '$';
-}
+}*/
 
 /**********************************************************************/
 /*  PRIVATE METHODS for this OBJECT  (using "static" in C)            */
@@ -62,12 +63,12 @@ static void out(char* s)
 static void match(int t)
 {
     if(DEBUG) printf("\n --------In match expected: %4d, found: %4d",
-                    t, lookahead);
-    if (lookahead == t) lookahead = pget_token();
+                    tok2lex(t), tok2lex(lookahead));
+    if (lookahead == t) lookahead = get_token();
     else {
     is_parse_ok=0;
     printf("\n *** Unexpected Token: expected: %4d found: %4d (in match)",
-              t, lookahead);
+              tok2lex(t), tok2lex(lookahead));
     }
 }
 
@@ -89,7 +90,7 @@ static void program_header()
 int parser()
 {
     in("parser");
-    lookahead = pget_token();       // get the first token
+    lookahead = get_token();       // get the first token
     program_header();               // call the first grammar rule
     out("parser");
     return is_parse_ok;             // status indicator
