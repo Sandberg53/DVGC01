@@ -60,7 +60,12 @@ static void set_addr(int ftref, int    faddr)  { addr[ftref] = faddr; }
 static void addrow(char *fname, toktyp frole, toktyp ftype,
                    int fsize, int faddr)
 {
-    printf("\n *** TO BE DONE");
+    set_name(numrows, fname);
+    set_role(numrows, frole);
+    set_type(numrows, ftype);
+    set_size(numrows, fsize);
+    set_addr(numrows, faddr);
+    numrows++;
 }
 /**********************************************************************/
 /*  Initialise the symbol table                                       */
@@ -79,8 +84,11 @@ static void initst()
 /**********************************************************************/
 static int get_ref(char * fpname)
 {
-    printf("\n *** TO BE DONE"); return 0;
-}
+    for(int i=0; i < numrows; i++){
+        if(!strcmp(fpname, get_name(i)))   return i;
+    }
+    return nfound;
+} 
 
 /**********************************************************************/
 /*  PUBLIC METHODS for this OBJECT  (EXPORTED)                        */
@@ -90,12 +98,20 @@ static int get_ref(char * fpname)
 /**********************************************************************/
 static void p_symrow(int ftref)
 {
-    printf("\n *** TO BE DO1NE");
+    //printf("\n *** TO BE DO1NE");
+    //printf("---Printing symrow----\n");
+    printf("%10s\t%10s\t%10s\t%10d\t%10d\t\n",get_name(ftref), tok2lex(get_role(ftref)), tok2lex(get_type(ftref)), get_size(ftref), get_addr(ftref));
 }
 
 void p_symtab()
 {
-    printf("\n *** TO BE DO1NE");
+    //printf("\n *** TO BE DO1NE");
+    printf("----Printing Symbol table----\n");
+    printf("%10s\t%10s\t%10s\t%10s\t%10s\t\n\n","Name", "Role", "Type", "Size", "address");
+    for(int i = startp; i<numrows; i++){
+        p_symrow(i);
+    }
+    printf("\nStorage required: %d Bytes\n", get_size(startp));
 }
 
 /**********************************************************************/
@@ -103,7 +119,10 @@ void p_symtab()
 /**********************************************************************/
 void addp_name(char * fpname)
 {
-    printf("\n *** TO BE DO1NE");
+    //printf("\n *** TO BE DO1NE");
+    initst();
+    startp = numrows;
+    addrow(fpname, program, program, 0 ,0);
 }
 
 /**********************************************************************/
@@ -111,7 +130,7 @@ void addp_name(char * fpname)
 /**********************************************************************/
 void addv_name(char * fpname)
 {
-    printf("\n *** TO BE DO1NE");
+    addrow(fpname, var, nfound, 0, 0);
 }
 
 /**********************************************************************/
@@ -120,7 +139,7 @@ void addv_name(char * fpname)
 /**********************************************************************/
 int find_name(char * fpname)
 {
-    printf("\n *** TO BE DO1NE"); return 0;
+    return (get_ref(fpname) == nfound) ? 0 : 1;
 }
 
 /**********************************************************************/
@@ -128,7 +147,20 @@ int find_name(char * fpname)
 /**********************************************************************/
 void setv_type(toktyp ftype)
 {
-    printf("\n *** TO BE DO1NE");
+    int size = 0;
+    if(ftype == integer || ftype == boolean)    size = 4;
+    else if(ftype == real)  size = 8;
+
+    for(int i= startp; i< numrows; i++){
+        if(get_type(i) == nfound){
+            set_type(i, ftype);
+            set_size(i, size);
+            set_size(startp, get_size(startp) + size);
+            if(i == startp +1){
+                set_addr(i, 0);
+            }else{  set_addr(i, (get_size(i-1) + get_addr(i-1)));   }
+        }
+    }
 }
 
 /**********************************************************************/
@@ -136,7 +168,7 @@ void setv_type(toktyp ftype)
 /**********************************************************************/
 toktyp get_ntype(char * fpname)
 {
-    printf("\n *** TO BE DO1NE"); return 0;
+    return (get_ref(fpname) != nfound) ? get_type(get_ref(fpname)) : undef;
 }
 
 /**********************************************************************/
