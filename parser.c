@@ -21,7 +21,7 @@
 /**********************************************************************/
 /* OBJECT ATTRIBUTES FOR THIS OBJECT (C MODULE)                       */
 /**********************************************************************/
-#define DEBUG 1
+#define DEBUG 0                                                                     // 1
 static int  lookahead=0;
 static int  is_parse_ok=1;
 
@@ -78,8 +78,22 @@ static void match(int t)
 static void program_header()
 {
     in("program_header");
-    match(program); match(id); match('('); match(input);
-    match(','); match(output); match(')'); match(';');
+    match(program); 
+    if(lookahead == id)
+    {
+        addp_name(get_lexeme());
+        match(id);
+    }else
+    {
+        printf("\nSYNTAX: ID expected found %s", get_lexeme());
+        addp_name("???");
+        is_parse_ok = 0;
+    }
+  
+    match('('); match(input);
+    match(','); match(output);
+    match(')'); match(';');
+
     out("program_header");
 }
 static void type()
@@ -116,7 +130,16 @@ static void type()
 static void id_list()
 {
     in("id_list");
-
+    if(lookahead == id)
+    {
+        char * var_name = get_lexeme();
+        if(!find_name(var_name)) addv_name(var_name);
+        else
+        {
+            printf("\nSEMANTIC: ID already declared: %s", get_lexeme());
+            is_parse_ok = 0;
+        } 
+    }
     match(id);
 
     if(lookahead == ',')
@@ -328,11 +351,37 @@ static void stat_part()
 
 int parser()
 {
-    in("parser");
-    lookahead = get_token();       // get the first token
-    program_header();               // call the first grammar rule
-    out("parser");
-    return is_parse_ok;             // status indicator
+     in("parser");
+
+lookahead = get_token();       
+
+ if(lookahead != '$')
+ {
+     program_header();              
+     var_post();                      
+     stat_part();                     
+
+     if(lookahead != '$')
+     {
+         printf("\nSYNTAX: Extra symbols after end of parse!\n");    
+         while(lookahead != '$')
+         {
+             printf("%s ", get_lexeme());
+             lookahead = get_token();
+         }
+     } 
+ } else
+ {
+     printf("\nSYNTAX: Input file is empty");
+     is_parse_ok = 0;
+ }
+ /*if(is_parse_ok) printf("\nPARSE SUCCESSFUL!");
+ printf("\n____________________________________________________________");*/
+ p_symtab();
+ 
+ out("parser");
+ return is_parse_ok;             
+   
 }
 
 /**********************************************************************/

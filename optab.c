@@ -1,3 +1,4 @@
+//Daneil Sandberg
 /**********************************************************************/
 /* lab 1 DVG C01 - Operator Table OBJECT                              */
 /**********************************************************************/
@@ -43,7 +44,13 @@ static int optab[][NENTS] = {
 /**********************************************************************/
 void p_optab()
 {
-    printf("\n *** TO BE DO2NE");
+    printf("---Printing Optable---\n");
+    printf("%10s\t%10s\t%10s\t%10s\n\n", "Operator", "Arg1", "Arg2", "Result");
+    int i = 0;
+    do {
+        printf("%10s\t%10s\t%10s\t%10s\n", tok2lex(optab[i][0]), tok2lex(optab[i][1]), tok2lex(optab[i][2]), tok2lex(optab[i][3]));
+        i++;
+    }while(optab[i][1] != undef);
 }
 
 /**********************************************************************/
@@ -51,7 +58,15 @@ void p_optab()
 /**********************************************************************/
 int get_otype(int op, int arg1, int arg2)
 {
-    printf("\n *** TO BE DO2NE"); return 0;
+    for(int i= 0; optab[i][1] != undef; i++){
+        if(optab[i][0] == op &&
+           optab[i][1] == arg1 &&
+           optab[i][2] == arg2)
+        {
+            return optab[i][3]; 
+        }
+    }
+    return undef;
 }
 
 /**********************************************************************/

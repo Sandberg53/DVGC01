@@ -98,14 +98,11 @@ static int get_ref(char * fpname)
 /**********************************************************************/
 static void p_symrow(int ftref)
 {
-    //printf("\n *** TO BE DO1NE");
-    //printf("---Printing symrow----\n");
     printf("%10s\t%10s\t%10s\t%10d\t%10d\t\n",get_name(ftref), tok2lex(get_role(ftref)), tok2lex(get_type(ftref)), get_size(ftref), get_addr(ftref));
 }
 
 void p_symtab()
 {
-    //printf("\n *** TO BE DO1NE");
     printf("----Printing Symbol table----\n");
     printf("%10s\t%10s\t%10s\t%10s\t%10s\t\n\n","Name", "Role", "Type", "Size", "address");
     for(int i = startp; i<numrows; i++){
@@ -119,7 +116,6 @@ void p_symtab()
 /**********************************************************************/
 void addp_name(char * fpname)
 {
-    //printf("\n *** TO BE DO1NE");
     initst();
     startp = numrows;
     addrow(fpname, program, program, 0 ,0);
